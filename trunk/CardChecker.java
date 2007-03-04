@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.image.*;
 
 
-public class KartenErkenner {
+public class CardChecker {
 
     public static String ermittelWert(BufferedImage image, int anpasser,
             int eigenerAnpasser) {
