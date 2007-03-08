@@ -89,11 +89,22 @@ public class CardChecker {
         return "Keine Zuweisung";
 
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     public static void main(String[] args) {
 
         try {
             // Get the screen size
+            
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             Rectangle rectangle = new Rectangle(0, 0, screenSize.width,
                     screenSize.height);
