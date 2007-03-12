@@ -26,7 +26,7 @@ public class Client
       try
       {
         // Socket an Port 4712
-        server = new Socket("91.10.158.37",4712);
+        server = new Socket("becks.dnsalias.com",4712);
 
         System.out.println("Verbunden mit " + server.getInetAddress());
         
@@ -74,7 +74,7 @@ public class Client
 
     public static void main (String[] args) throws Exception
     {
-        ChatClient v = new ChatClient();
+        Client v = new Client();
 
         v.verbindeMitServer();
 
