@@ -9,7 +9,7 @@ import java.util.LinkedList;
 public class CardSet {
     
     // Datenstruktur fuer Spielkarten
-    LinkedList<Card> cards = new LinkedList<Card>();
+    private LinkedList<Card> cards = new LinkedList<Card>();
     
     /**
      * Konstruktor.
@@ -22,6 +22,24 @@ public class CardSet {
             cards.add(new Card("HERZ", i));
             cards.add(new Card("KARO", i));
         }
+    }
+    
+    
+    /**
+     * Liefert das aktuelle Kartenset zurueck.
+     * @return Kartenset
+     */
+    public LinkedList<Card> getCardSet() {
+        return cards;
+    }
+    
+    
+    /**
+     * Entfernt eine ausgespielte Karte aus dem Kartenstapel.
+     * @param card ausgespielte Karte
+     */
+    public void removeCard(Card card) {
+        cards.remove(card);
     }
 
 }

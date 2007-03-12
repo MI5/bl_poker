@@ -11,6 +11,7 @@ public class Card {
     
     // Wert der Karte
     // 2,3,4,5,6,7,8,9,10 wie gehabt. Bube = 11, Dame = 12, Koenig = 13, Ass =14
+    // Wert = 0 => Karte noch nicht belegt.
     // Bewusst diese int-Zuordnung um Vergleiche besser zu realisieren.
     int wert;
     
