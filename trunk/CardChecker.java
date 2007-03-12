@@ -90,18 +90,7 @@ public class CardChecker {
 
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    public static void main(String[] args) {
-
+    public void ermittleFarbe() {
         try {
             // Get the screen size
             
@@ -202,6 +191,19 @@ public class CardChecker {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+
+    public static void main(String[] args) {
+
+
 
     }
 }
