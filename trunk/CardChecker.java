@@ -8,20 +8,47 @@ public class CardChecker {
 
     private LinkedList<Card> ownCards = new LinkedList<Card>();
     
+    // Initialisiere Objekte fuer Screenshoterstellung
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    Rectangle rectangle = new Rectangle(0, 0, screenSize.width,
+            screenSize.height);
+    Robot robot;
+    BufferedImage image;
+    
+    
     
     public CardChecker() {
+        // Initialisiere Robot Objekt fuer Methodenbereitstellung 
+        try {
+            robot = new Robot();
+        } catch (AWTException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // Hole Screenshot
+        image = robot.createScreenCapture(rectangle);
         ermittleTischKarten();
         ermittleEigeneKarten();
     }
 
+    /**
+     * Ermittelt Kartenwert.
+     * @param image Screenshot
+     * @param anpasser x-Anpassung
+     * @param eigenerAnpasser y-Anpassung fuer eigene Karten
+     * @return Wert der Karte
+     */
     public static int ermittelWert(BufferedImage image, int anpasser,
             int eigenerAnpasser) {
+        // Zaehlvariable fuer durchgelaufene Pixel != weiß
         int count = 0;
-        // Ermittel Ass
+        // Schleifen laufen Pixel in einem Rechteck ab
         for (int i = 274 + anpasser; i < 287 + anpasser; i++) {
             for (int j = 187 + eigenerAnpasser; j < 196 + eigenerAnpasser; j++) {
+                // Wenn der Pixel nicht weiß ist: ...
                 if (image.getRGB(i, j) != -1) {
-                    // Entscheidbar in einem Durchgang
+                    // Pruefe auf eindeutige Pixelkoordinaten die nur
+                    // bei einem Kartenwert farbig sind
                     if ((i == 275 + anpasser) && (j == 191 + eigenerAnpasser)
                             && count == 0) {
                         return 14;
@@ -48,7 +75,7 @@ public class CardChecker {
                         return 13;
                     }
 
-                    // Entscheidbar in drei DurchgÃ¤ngen
+                    // Pruefe weiter
 
                     if ((i == 277 + anpasser) && (j == 187 + eigenerAnpasser)
                             && count == 2) {
@@ -59,14 +86,14 @@ public class CardChecker {
                         return 9;
                     }
 
-                    // Entscheidbar in 5 Durchgaengen
+                    // und weiter
 
                     if ((i == 276 + anpasser) && (j == 191 + eigenerAnpasser)
                             && count == 4) {
                         return 10;
                     }
 
-                    // Entscheidbar in 6 DurchgÃ¤ngen
+                    // und weiter
 
                     if ((i == 278 + anpasser) && (j == 190 + eigenerAnpasser)
                             && count == 5) {
@@ -77,44 +104,38 @@ public class CardChecker {
                         return 5;
                     }
 
-                    // Entscheidbar in 11 Durchgaengen
+                    // spaetestens beim 11. Durchgang sollte der Wert gefunden sein
+                    
                     if ((i == 278 + anpasser) && (j == 189 + eigenerAnpasser)
                             && count == 10) {
                         return 6;
                     }
-
                     if ((i == 278 + anpasser) && (j == 188 + eigenerAnpasser)
                             && count == 10) {
                         return 8;
                     }
-
+                    // zur Bestimmung des Kartenwerts erhoehe den Pixelzaehler.
                     if (image.getRGB(i, j) != -1) {
                         count++;
                     }
                 }
-
             }
-
         }
+        // Es wurden noch keine Karten ausgespielt
         return 0;
-
     }
 
+    /**
+     * Ermittelt die Farbe der Tischkarte.
+     *
+     */
     public void ermittleTischKarten() {
         try {
-            // Get the screen size
-
-            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            Rectangle rectangle = new Rectangle(0, 0, screenSize.width,
-                    screenSize.height);
-
-            Robot robot = new Robot();
-
-            BufferedImage image = robot.createScreenCapture(rectangle);
-
+            // Initialisiere Tischkarten
             tableCards = new LinkedList<Card>();
-            
+            // Initialisiere X-Anpassung
             int anpasser = 0;
+            // Initialisiere Y-Anpassung fuer eigene Karten
             int eigenerAnpasser = 0;
             for (int i = 1; i < 6; i++) {
                 if (image.getRGB(274 + anpasser, 202) != -1) {
@@ -123,16 +144,12 @@ public class CardChecker {
                             || image.getRGB(274 + anpasser, 202) == -14308827
                             || image.getRGB(274 + anpasser, 202) == -14714079
                             || image.getRGB(274 + anpasser, 202) == -14372570) {
-//                        System.out.println(i + ".Karte: nicht ausgespielt");
+                        // Noch keine Karte ausgespielt. Not a card
                         tableCards.addLast(new Card("NAC", 0));
                     } else {
-//                        System.out.print(i + ".Karte: Karo ");
-//                        System.out.println(ermittelWert(image, anpasser,
-//                                eigenerAnpasser));
+                        // Karo bestimmt, ermittel Wert.
                         tableCards.addLast(new Card("KARO", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
-                        
-                       
                     }
                 } else if (image.getRGB(275 + anpasser, 198) != -1) {
                     if (image.getRGB(275 + anpasser, 198) == -14240472
@@ -140,12 +157,10 @@ public class CardChecker {
                             || image.getRGB(275 + anpasser, 198) == -14374619
                             || image.getRGB(275 + anpasser, 198) == -14245082
                             || image.getRGB(275 + anpasser, 198) == -14306778) {
-//                        System.out.println(i + ".Karte: nicht ausgespielt");
+                        // Noch keine Karte ausgespielt. Not a card
                         tableCards.addLast(new Card("NAC", 0));
                     } else {
-//                        System.out.print(i + ".Karte: Herz ");
-//                        System.out.println(ermittelWert(image, anpasser,
-//                                eigenerAnpasser));
+                        // Herz bestimmt, ermittel Wert.
                         tableCards.addLast(new Card("HERZ", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
                     }
@@ -155,12 +170,10 @@ public class CardChecker {
                             || image.getRGB(275 + anpasser, 200) == -14375131
                             || image.getRGB(275 + anpasser, 200) == -14448347
                             || image.getRGB(275 + anpasser, 200) == -14307291) {
-//                        System.out.println(i + ".Karte: nicht ausgespielt");
+                        // Noch keine Karte ausgespielt. Not a card
                         tableCards.addLast(new Card("NAC", 0));
                     } else {
-//                        System.out.print(i + ".Karte: Kreuz ");
-//                        System.out.println(ermittelWert(image, anpasser,
-//                                eigenerAnpasser));
+                        // Kreuz bestimmt, ermittel Wert.
                         tableCards.addLast(new Card("KREUZ", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
                     }
@@ -170,17 +183,16 @@ public class CardChecker {
                             || image.getRGB(274 + anpasser, 202) == -14440409
                             || image.getRGB(274 + anpasser, 202) == -14930405
                             || image.getRGB(274 + anpasser, 202) == -14372056) {
-//                        System.out.println(i + ".Karte: nicht ausgespielt");
+                        // Noch keine Karte ausgespielt. Not a card
                         tableCards.addLast(new Card("NAC", 0));
                     } else {
-//                        System.out.print(i + ".Karte: Pik ");
-//                        System.out.println(ermittelWert(image, anpasser,
-//                                eigenerAnpasser));
+                        // Pik bestimmt, ermittel Wert.
                         tableCards.addLast(new Card("PIK", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
                     }
 
                 }
+                // passe X-Richtung fuer naechste Karte an
                 anpasser += 54;
             }
 
@@ -191,55 +203,44 @@ public class CardChecker {
         }
     }
 
+    /**
+     * Ermittelt die eigenen Karten.
+     *
+     */
     public void ermittleEigeneKarten() {
         try {
-            // Get the screen size
-
-            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            Rectangle rectangle = new Rectangle(0, 0, screenSize.width,
-                    screenSize.height);
-
-            Robot robot = new Robot();
-
-            BufferedImage image = robot.createScreenCapture(rectangle);
-            
-            
-            System.out.println("EIGENE KARTEN:");
+            // Initialisiere x-Anpassung
             int anpasser = 440;
+            // Initialisiere y-Anpassung
             int eigenerAnpasser = 59;
+            // Teste ob Karten ausgespilt sind
             if (image.getRGB(748, 244) != -12894323) {
                 for (int i = 6; i < 8; i++) {
+                    // Und pruefe auf Kartenfarbe
                     if (image.getRGB(274 + anpasser, 202 + eigenerAnpasser) != -1) {
-//                        System.out.print(i + ".Karte: Karo ");
-//                        System.out.println(ermittelWert(image, anpasser,
-//                                eigenerAnpasser));
+                        // Karo bestimmt, ermittel Wert.
                         ownCards.addLast(new Card("KARO", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
 
                     } else if (image.getRGB(275 + anpasser,
                             198 + eigenerAnpasser) != -1) {
-//                        System.out.print(i + ".Karte: Herz ");
-//                        System.out.println(ermittelWert(image, anpasser,
-//                                eigenerAnpasser));
+                        // Herz bestimmt, ermittel Wert.
                         ownCards.addLast(new Card("HERZ", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
                         
                     } else if (image.getRGB(275 + anpasser,
                             200 + eigenerAnpasser) != -1) {
-//                        System.out.print(i + ".Karte: Kreuz ");
-//                        System.out.println(ermittelWert(image, anpasser,
-//                                eigenerAnpasser));
+                        // Kreuz bestimmt, ermittel Wert.
                         ownCards.addLast(new Card("KREUZ", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
                         
                     } else {
-//                        System.out.print(i + ".Karte: Pik ");
-//                        System.out.println(ermittelWert(image, anpasser,
-//                                eigenerAnpasser));
+                        // Pik bestimmt, ermittel Wert.
                         ownCards.addLast(new Card("PIK", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
                         
                     }
+                    // Passe Koordinaten an
                     anpasser += 15;
                     eigenerAnpasser += 4;
                 }
@@ -272,12 +273,18 @@ public class CardChecker {
         ermittleEigeneKarten();
         return ownCards;
     }
-    
 
+    /**
+     * Liefert eine Uebersicht der ausgespielten und eigenen Karten.
+     * 
+     * @return Uebersicht.
+     */
     public String toString() {
         String str = "Auf dem Tisch:\nFlop: " + tableCards.get(0) + ", " + tableCards.get(1) + ", " + tableCards.get(2) + "\n";
         str += "Turn: " + tableCards.get(3) + "\nRiver: " + tableCards.get(4) + "\n\n";
-        //str += "Eigene Hand: " + ownCards.get(0) + ", " + ownCards.get(1);
+        if (ownCards.size() != 0) {
+            str += "Eigene Hand: " + ownCards.get(0) + ", " + ownCards.get(1);
+        }
         return str;
         
     }
