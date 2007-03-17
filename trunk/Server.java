@@ -1,67 +1,46 @@
-/*
- * Chat-Server
- */
-
 import java.net.*;
 import java.io.*;
-import java.util.*;
 
+/**
+ * Klasse Server.
+ * Erlaubt Kommunikation mit dem Poker-Partner.
+ * @author Christian
+ *
+ */
 public class Server {
+    
+    private static String sendString;
+    
+    public Server(String sendString) {
+        this.sendString = sendString;
+    }
 
     public static void main(String[] args) {
 
         try {
+            sendString = "Pik 9";
 
-            // Socket an Port 4712
+            // Socket an Port 4712 erstellen
             ServerSocket server = new ServerSocket(4712);
+            // Warte, bis Verbindung hergestellt ist.
+            Socket client = server.accept();
+            
+            OutputStream out = client.getOutputStream();
+            
+            byte b[] = sendString.getBytes();
+            
+            out.write(b);
+            byte[] temp = new byte[100];
+            InputStream in = client.getInputStream();
+            in.read(b);
+            System.out.println("Client antwortet : " + new String(b));
 
-            // Endlosschleife
-            while (true) {
-
-                System.out.println("Warten auf den Matze...");
-
-                // warten auf Matze
-                Socket client = server.accept();
-
-                System.out.println("Mit Matze " + client.getInetAddress()
-                        + " verbunden");
-                
-                while (true) {
-                    // OutputStream erzeugen
-                    OutputStream out = client.getOutputStream();
-
-                    BufferedReader br = new BufferedReader(
-                            new InputStreamReader(System.in));
-                    System.out.println("Was sage ich?");
-                    String s = br.readLine();
-                    byte b[] = s.getBytes();
-
-                    // Nachricht ausgeben
-                    out.write(b);
-                    byte[] temp = b;
-                    InputStream in = client.getInputStream();
-                    while (temp.equals(b) == true) {
-                        b = new byte[100];
-                        
-                        in.read(b);
-                    }
-                    System.out.println("Client antwortet : " + new String(b));
-                    if (new String(b).startsWith("exit")) {
-                        break;
-                    }
-
-                    
-                }
-            }
+            
+            
         } catch (IOException e) {
             System.err.println("Fehler\n" + e);
             System.exit(1);
         }
     }
-    /**
-     * InputStream in = client.getInputStream(); InputStreamReader read = new
-     * InputStreamReader(in); BufferedReader bread = new BufferedReader(read);
-     * String temp = bread.readLine(); System.out.println(temp); while (temp !=
-     * null) { System.out.println("Botschaft: "+temp); temp = bread.readLine(); }
-     */
+
 }

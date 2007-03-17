@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.image.*;
 import java.util.LinkedList;
 
+
 public class CardChecker {
 
     private LinkedList<Card> tableCards = new LinkedList<Card>();
