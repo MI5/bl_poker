@@ -5,52 +5,61 @@
 import java.net.*;
 import java.io.*;
 
-public class Client
-{
-    private Socket server;
-    private InputStream in;
-    private OutputStream  out;
-    private String msg;
-    private byte [] b = new byte[100];
+public class Client {
+    private static Socket server;
 
+    private static InputStream in;
 
-    public String leseTastatur() throws Exception
-    {
-       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-       String s = br.readLine();
-       return s;
-     }
+    private static OutputStream out;
 
-    public void verbindeMitServer() throws Exception
-    {
-      try
-      {
-        // Socket an Port 4712
-        server = new Socket("becks.dnsalias.com",4712);
+    private static String msg;
 
-        System.out.println("Verbunden mit " + server.getInetAddress());
-        
-        // InputStream erzeugen
-        in = server.getInputStream();        
-      }
-      catch (IOException e)
-      {
-        System.err.println("Fehler\n" + e);
-        System.exit(1);
-      }
+    private static byte[] b = new byte[100];
+
+    /**
+     * Baut Verbindung mit dem Server auf und probiert dies solange bis die
+     * Verbindung hergestellt wurde.
+     */
+    public static void connect() {
+        boolean connected = false;
+        System.out.println("Versuche Daten auszutauschen");
+        while (!connected) {
+            connected = true;
+            try {
+                // Socket an Port 4712
+                server = new Socket("becks.dnsalias.com", 4712);
+                System.out.println("Verbunden mit " + server.getInetAddress());
+
+                // InputStream erzeugen
+                in = server.getInputStream();
+            } catch (IOException e) {
+                // Gab es eine Exception, konnte Verbindung nicht hergestellt
+                // werden.
+                // Versuche es also erneut.
+                if (e instanceof ConnectException) {
+                    connected = false;
+                }
+            }
+        }
+
     }
 
-    public void leseVomServer() throws Exception
-    {
-        // max 100 Bytes lesen
-        try
-        {
-          int num = in.read(b);
-        }
-        catch (IOException e)
-        {
-          System.err.println("Fehler\n" + e);
-          System.exit(1);
+    public static void main(String[] args) throws Exception {
+
+        connect();
+
+        String abfrage;
+
+        out = server.getOutputStream();
+        b = "Pik 2".getBytes();
+        out.write(b);
+        out.flush();
+
+        try {
+            int num = in.read(b);
+        } catch (IOException e) {
+            System.err.println("Fehler\n" + e);
+            System.exit(1);
         }
 
         // Byte-Array in String umwandeln
@@ -58,31 +67,6 @@ public class Client
 
         // Nachricht des Server ausgeben
         System.out.println("Server : " + msg);
-    }
 
-        
-    public String sendeAnServer() throws Exception
-    {
-        msg = leseTastatur();
-        out = server.getOutputStream();
-        out.write(b);
-        out.flush();
-        System.out.println("Client-Antwort : '" + msg + "'");
-        return msg;
-    }
-
-
-    public static void main (String[] args) throws Exception
-    {
-        Client v = new Client();
-
-        v.verbindeMitServer();
-
-        String abfrage;
-        do
-        {
-          v.leseVomServer();
-          abfrage = v.sendeAnServer();
-        } while (!abfrage.equals("exit\n"));
     }
 }
