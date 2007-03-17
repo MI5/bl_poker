@@ -9,28 +9,35 @@ import java.io.*;
  */
 public class Server {
     
-    private static String sendString;
-    
+    private String sendString;
+
+    /**
+     * Konstruktor. 
+     * @param sendString zu sendende Karten
+     */
     public Server(String sendString) {
         this.sendString = sendString;
     }
 
-    public static void main(String[] args) {
+    /**
+     * Sendet die eigenen Karten zum Poker-Partner.
+     */
+    public void send() {
 
         try {
-            sendString = "Pik 9";
 
             // Socket an Port 4712 erstellen
-            ServerSocket server = new ServerSocket(4712);
+            ServerSocket serverSock = new ServerSocket(4712);
             // Warte, bis Verbindung hergestellt ist.
-            Socket client = server.accept();
-            
+            Socket client = serverSock.accept();
+            // hole Outputstream
             OutputStream out = client.getOutputStream();
-            
+            // schreibe Karten in ein ByteArray
             byte b[] = sendString.getBytes();
-            
+            // schreibe Daten auf den Outputstream
             out.write(b);
-            byte[] temp = new byte[100];
+            out.flush();
+            // hole den Inputstream
             InputStream in = client.getInputStream();
             in.read(b);
             System.out.println("Client antwortet : " + new String(b));
@@ -42,5 +49,13 @@ public class Server {
             System.exit(1);
         }
     }
+    
+    
+    public static void main(String[] args) {
+        //Testmethode
+        Server s = new Server("h12c04");
+        s.send();
+    }
+    
 
 }
