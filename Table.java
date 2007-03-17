@@ -1,4 +1,4 @@
-/**
+ /**
  * Klasse Table.
  * Repraesentiert den Pokertisch mit Spielern und Karten.
  * @author Christian
