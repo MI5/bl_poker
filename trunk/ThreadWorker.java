@@ -32,10 +32,11 @@ public class ThreadWorker implements Runnable {
 //                System.out.println(table.check.getOwnCards().toString());
 //                System.out.println(table.check.getOwnCards().toString().replaceAll("0", "").length());
                 cards = table.check.getOwnCards();
+                table.refresh();
                 fold = false;
                 System.out.println("Sende meine neuen Karten");
                 table.sendClient();
-                //table.sendServer();
+//                table.sendServer();
                 
             }
             // Wird gefoldet?
