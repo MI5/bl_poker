@@ -246,7 +246,7 @@ public class CardChecker {
                     eigenerAnpasser += 4;
                 }
             } else {
-                System.out.println("Eigene Karten noch nicht erhalten!");
+//                System.out.println("Eigene Karten noch nicht erhalten!");
             }
             
 
