@@ -5,7 +5,7 @@
  */
 public class Card {
     
-    // Farbe der Karte: KREUZ, PIK, HERZ, KARO
+    // Farbe der Karte: KREUZ(c), PIK(s), HERZ(h), KARO(d)
     // Fuer Berechnung nur objektiv
     String farbe;
     
@@ -30,7 +30,7 @@ public class Card {
      * toString Methode.
      */
     public String toString() {
-        return farbe+" "+wert;
+        return farbe+""+wert;
     }
 
 }

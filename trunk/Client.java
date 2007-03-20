@@ -18,7 +18,11 @@ public class Client {
 
     private byte[] b = new byte[100];
 
-    
+    /**
+     * Konstuktor.
+     * Erzeugt einen Client mit uebergebener Zeichenkette.
+     * @param msg zu uebertragene Zeichenkette.
+     */
     public Client(String msg) {
         this.msg = msg;
     }
@@ -57,7 +61,7 @@ public class Client {
     /**
      * Sendet die eigenen Karten an den Poker-Partner.
      */
-    public void send() {
+    public String send() {
         // Connecte mit dem Poker-Server
         connect();
 
@@ -80,14 +84,11 @@ public class Client {
         msg = new String(b);
         // Nachricht des Server ausgeben
         System.out.println("Server : " + msg);
+        return msg;
     }
     
     
-    public static void main(String[] args) {
-        //Testmethode
-        Client c = new Client("s02d14");
-        c.send();
-    }
+
     
     
 }

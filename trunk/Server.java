@@ -22,7 +22,7 @@ public class Server {
     /**
      * Sendet die eigenen Karten zum Poker-Partner.
      */
-    public void send() {
+    public String send() {
 
         try {
 
@@ -41,6 +41,7 @@ public class Server {
             InputStream in = client.getInputStream();
             in.read(b);
             System.out.println("Client antwortet : " + new String(b));
+            return new String(b);
 
             
             
@@ -48,14 +49,15 @@ public class Server {
             System.err.println("Fehler\n" + e);
             System.exit(1);
         }
+        return sendString;
     }
     
     
-    public static void main(String[] args) {
-        //Testmethode
-        Server s = new Server("h12c04");
-        s.send();
-    }
+//    public static void main(String[] args) {
+//        //Testmethode
+//        Server s = new Server("s04h10");
+//        s.send();
+//    }
     
 
 }
