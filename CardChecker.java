@@ -28,8 +28,6 @@ public class CardChecker {
         }
         // Hole Screenshot
         image = robot.createScreenCapture(rectangle);
-        ermittleTischKarten();
-        ermittleEigeneKarten();
     }
 
     /**
@@ -146,10 +144,10 @@ public class CardChecker {
                             || image.getRGB(274 + anpasser, 202) == -14714079
                             || image.getRGB(274 + anpasser, 202) == -14372570) {
                         // Noch keine Karte ausgespielt. Not a card
-                        tableCards.addLast(new Card("NAC", 0));
+                        tableCards.addLast(new Card("N", 0));
                     } else {
                         // Karo bestimmt, ermittel Wert.
-                        tableCards.addLast(new Card("KARO", ermittelWert(image, anpasser,
+                        tableCards.addLast(new Card("d", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
                     }
                 } else if (image.getRGB(275 + anpasser, 198) != -1) {
@@ -159,10 +157,10 @@ public class CardChecker {
                             || image.getRGB(275 + anpasser, 198) == -14245082
                             || image.getRGB(275 + anpasser, 198) == -14306778) {
                         // Noch keine Karte ausgespielt. Not a card
-                        tableCards.addLast(new Card("NAC", 0));
+                        tableCards.addLast(new Card("N", 0));
                     } else {
                         // Herz bestimmt, ermittel Wert.
-                        tableCards.addLast(new Card("HERZ", ermittelWert(image, anpasser,
+                        tableCards.addLast(new Card("h", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
                     }
                 } else if (image.getRGB(275 + anpasser, 200) != -1) {
@@ -172,10 +170,10 @@ public class CardChecker {
                             || image.getRGB(275 + anpasser, 200) == -14448347
                             || image.getRGB(275 + anpasser, 200) == -14307291) {
                         // Noch keine Karte ausgespielt. Not a card
-                        tableCards.addLast(new Card("NAC", 0));
+                        tableCards.addLast(new Card("N", 0));
                     } else {
                         // Kreuz bestimmt, ermittel Wert.
-                        tableCards.addLast(new Card("KREUZ", ermittelWert(image, anpasser,
+                        tableCards.addLast(new Card("c", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
                     }
                 } else {
@@ -185,10 +183,10 @@ public class CardChecker {
                             || image.getRGB(274 + anpasser, 202) == -14930405
                             || image.getRGB(274 + anpasser, 202) == -14372056) {
                         // Noch keine Karte ausgespielt. Not a card
-                        tableCards.addLast(new Card("NAC", 0));
+                        tableCards.addLast(new Card("N", 0));
                     } else {
                         // Pik bestimmt, ermittel Wert.
-                        tableCards.addLast(new Card("PIK", ermittelWert(image, anpasser,
+                        tableCards.addLast(new Card("s", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
                     }
 
@@ -210,6 +208,8 @@ public class CardChecker {
      */
     public void ermittleEigeneKarten() {
         try {
+            // Initialisiere Tischkarten
+            ownCards = new LinkedList<Card>();
             // Initialisiere x-Anpassung
             int anpasser = 440;
             // Initialisiere y-Anpassung
@@ -220,24 +220,24 @@ public class CardChecker {
                     // Und pruefe auf Kartenfarbe
                     if (image.getRGB(274 + anpasser, 202 + eigenerAnpasser) != -1) {
                         // Karo bestimmt, ermittel Wert.
-                        ownCards.addLast(new Card("KARO", ermittelWert(image, anpasser,
+                        ownCards.addLast(new Card("d", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
 
                     } else if (image.getRGB(275 + anpasser,
                             198 + eigenerAnpasser) != -1) {
                         // Herz bestimmt, ermittel Wert.
-                        ownCards.addLast(new Card("HERZ", ermittelWert(image, anpasser,
+                        ownCards.addLast(new Card("h", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
                         
                     } else if (image.getRGB(275 + anpasser,
                             200 + eigenerAnpasser) != -1) {
                         // Kreuz bestimmt, ermittel Wert.
-                        ownCards.addLast(new Card("KREUZ", ermittelWert(image, anpasser,
+                        ownCards.addLast(new Card("c", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
                         
                     } else {
                         // Pik bestimmt, ermittel Wert.
-                        ownCards.addLast(new Card("PIK", ermittelWert(image, anpasser,
+                        ownCards.addLast(new Card("s", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
                         
                     }
@@ -260,7 +260,7 @@ public class CardChecker {
      * 
      * @return TableCards
      */
-    public LinkedList<Card> returnTableCards() {
+    public LinkedList<Card> getTableCards() {
         ermittleTischKarten();
         return tableCards;
     }
@@ -270,7 +270,7 @@ public class CardChecker {
      * 
      * @return eigene Karten
      */
-    public LinkedList<Card> returnOwnCards() {
+    public LinkedList<Card> getOwnCards() {
         ermittleEigeneKarten();
         return ownCards;
     }
