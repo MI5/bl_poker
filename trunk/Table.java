@@ -76,16 +76,36 @@ public class Table {
         send.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 // SERVER:
-//                Server server = new Server(check.getOwnCards().getFirst().toString()+check.getOwnCards().getLast().toString());
+//                Server server;
+//                if (check.getOwnCards().size() == 0) { 
+//                    server = new Server("nocard");
+//                }
+//                else {
+//                    server = new Server(check.getOwnCards().getFirst().toString()+check.getOwnCards().getLast().toString());
+//                }
 //                String msg = server.send();
                 
                 // CLIENT
-                Client client = new Client(check.getOwnCards().getFirst().toString()+check.getOwnCards().getLast().toString());
+                Client client;
+                if (check.getOwnCards().size() == 0) { 
+                    client = new Client("nocard");
+                }
+                else {
+                    client = new Client(check.getOwnCards().getFirst().toString()+check.getOwnCards().getLast().toString());
+                }
                 String msg = client.send();
+                
                 
                 playerCards = new LinkedList<Card>();
                 playerCards.add(new Card(msg.substring(0, 1),new Integer(msg.substring(1,3)).intValue()));
                 playerCards.add(new Card(msg.substring(3, 4),new Integer(msg.substring(4,6)).intValue()));
+                
+                check = new CardChecker();
+                painter.removeAll();
+                painter.setOwnCards(check.getOwnCards());
+                painter.setTableCards(check.getTableCards());
+                painter.setPlayerCards(playerCards);
+                painter.repaint();
                 System.out.println(playerCards.toString());
                 
                 
@@ -99,7 +119,7 @@ public class Table {
                 painter.removeAll();
                 painter.setOwnCards(check.getOwnCards());
                 painter.setTableCards(check.getTableCards());
-                //painter.setPlayerCards();
+                painter.setPlayerCards(playerCards);
                 painter.repaint();
 
                 
