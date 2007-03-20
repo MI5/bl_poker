@@ -27,12 +27,13 @@ public class ThreadWorker implements Runnable {
             }
             // Neue Karten auf der Hand?
             else if (table.check.getOwnCards().toString().replaceAll("0", "").length() > 7) {
-                System.out.println("WECHSEL mit");
-                System.out.println(cards.toString());
-                System.out.println(table.check.getOwnCards().toString());
-                System.out.println(table.check.getOwnCards().toString().replaceAll("0", "").length());
+//                System.out.println("WECHSEL mit");
+//                System.out.println(cards.toString());
+//                System.out.println(table.check.getOwnCards().toString());
+//                System.out.println(table.check.getOwnCards().toString().replaceAll("0", "").length());
                 cards = table.check.getOwnCards();
                 fold = false;
+                System.out.println("Sende meine neuen Karten");
                 table.sendClient();
                 //table.sendServer();
                 
