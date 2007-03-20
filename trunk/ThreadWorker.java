@@ -4,16 +4,19 @@ import java.util.LinkedList;
 public class ThreadWorker implements Runnable {
 
     public void run() {
+        Table table = new Table();
         boolean fold = false;
         LinkedList<Card> cards = new LinkedList<Card>();
-        CardChecker card = new CardChecker();
-        cards = card.getOwnCards();
+        //CardChecker card = new CardChecker();
+        cards = table.check.getOwnCards();
+        System.out.println("Ueberpruefung startet jetzt");
         while(true) {
-            card = new CardChecker();
+            table.check = new CardChecker();
 //            System.out.println(card.getOwnCards().toString());
 //            System.out.println(cards.toString());
 //            System.out.println(card.getOwnCards().toString().replaceAll("0", "").length());
-            if (cards.toString().equals(card.getOwnCards().toString())) {
+            // Nichts neues
+            if (cards.toString().equals(table.check.getOwnCards().toString())) {
                 try {
                     Thread.sleep(2000);
                     
@@ -22,23 +25,27 @@ public class ThreadWorker implements Runnable {
                     e.printStackTrace();
                 }
             }
-            else if (card.getOwnCards().toString().replaceAll("0", "").length() > 7) {
+            // Neue Karten auf der Hand?
+            else if (table.check.getOwnCards().toString().replaceAll("0", "").length() > 7) {
                 System.out.println("WECHSEL mit");
                 System.out.println(cards.toString());
-                System.out.println(card.getOwnCards().toString());
-                System.out.println(card.getOwnCards().toString().replaceAll("0", "").length());
-                cards = card.getOwnCards();
+                System.out.println(table.check.getOwnCards().toString());
+                System.out.println(table.check.getOwnCards().toString().replaceAll("0", "").length());
+                cards = table.check.getOwnCards();
                 fold = false;
-                
+                table.sendClient();
+                //table.sendServer();
                 
             }
-            else if (card.getOwnCards().toString().replaceAll("0", "").length() == 2 && fold == false) {
-                System.out.println("FOLD");
-                System.out.println("WECHSEL mit");
-                System.out.println(cards.toString());
-                System.out.println(card.getOwnCards().toString());
+            // Wird gefoldet?
+            else if (table.check.getOwnCards().toString().replaceAll("0", "").length() == 2 && fold == false) {
+                table.refresh();
+//                System.out.println("FOLD");
+//                System.out.println("WECHSEL mit");
+//                System.out.println(cards.toString());
+//                System.out.println(card.getOwnCards().toString());
                 
-                cards = card.getOwnCards();
+                cards = table.check.getOwnCards();
                 fold = true;
                 
             }
