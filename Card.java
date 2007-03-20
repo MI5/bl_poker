@@ -30,7 +30,10 @@ public class Card {
      * toString Methode.
      */
     public String toString() {
-        return farbe+""+wert;
+        if (wert > 10)
+            return farbe+""+wert;
+        else 
+            return farbe+"0"+wert;
     }
 
 }
