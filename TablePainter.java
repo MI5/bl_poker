@@ -31,6 +31,7 @@ public class TablePainter extends JPanel {
      * @param g uebergebenes Graphik-Objekt
      */
     protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
         g.drawString("Eigene Karten:", 10, 10);
         g.drawString(ownCards.toString(), 10, 23);
         g.drawString("Mitspieler Karten", 10, 53);
