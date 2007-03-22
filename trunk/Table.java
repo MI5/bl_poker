@@ -41,7 +41,7 @@ public class Table {
         // ermoeglicht das Beenden ueber Klicken auf das Kreuz rechts oben
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // setzt die Groesse des JFrame
-        frame.setSize(202, 150);
+        frame.setSize(202, 200);
         // passt die Koordinaten an, damit das Frame nicht ueber dem Pokerfenster liegt.
         frame.setLocation(818, 0);
         // jetzt kann man es auch sehen. :)
@@ -151,7 +151,11 @@ public class Table {
         else {
             client = new Client(check.getOwnCards().getFirst().toString()+check.getOwnCards().getLast().toString());
         }
+        painter.removeAll();
+        painter.repaint();
+        painter.setInfo("Uebertrage Daten");
         String msg = client.send();
+        
         
         
         playerCards = new LinkedList<Card>();

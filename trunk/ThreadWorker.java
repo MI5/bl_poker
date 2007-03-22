@@ -35,8 +35,15 @@ public class ThreadWorker implements Runnable {
                 table.refresh();
                 fold = false;
                 System.out.println("Sende meine neuen Karten");
+//                table.sendClient();
+                table.sendServer();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
                 table.sendClient();
-//                table.sendServer();
                 
             }
             // Wird gefoldet?

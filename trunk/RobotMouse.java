@@ -1,6 +1,13 @@
-    import java.awt.AWTException;
+import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
+
+/**
+ * RobotMouse Klasse.
+ * Schockt den Benutzer durch Runterfahr-Antaueschen 
+ * @author Christian
+ *
+ */
 public class RobotMouse {
 
 

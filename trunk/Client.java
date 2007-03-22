@@ -8,14 +8,16 @@ import java.io.*;
  *
  */
 public class Client {
+    
+    // Variable fuer Socket
     private Socket server;
-
+    // InputStream fuer Verbindung
     private InputStream in;
-
+    // OutputStream fuer Verbindung
     private OutputStream out;
-
+    // zu uebertragene Information (Karten auf der Hand)
     private String msg;
-
+    // Array fuer Zerlegung in einzelne Zeichen
     private byte[] b = new byte[100];
 
     /**
