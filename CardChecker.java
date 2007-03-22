@@ -2,31 +2,41 @@ import java.awt.*;
 import java.awt.image.*;
 import java.util.LinkedList;
 
-
+/**
+ * Klasse CardChecker.
+ * Liest aus einem Screenshot die Karten aus.
+ * @author Christian
+ *
+ */
 public class CardChecker {
 
+    // Liste mit den Karten auf dem Tisch
     private LinkedList<Card> tableCards = new LinkedList<Card>();
-
+    // Liste mit eigenen Handkarten
     private LinkedList<Card> ownCards = new LinkedList<Card>();
-    
     // Initialisiere Objekte fuer Screenshoterstellung
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    // Betrachte den gesamten Bildschirm
     Rectangle rectangle = new Rectangle(0, 0, screenSize.width,
             screenSize.height);
+    // Initialisierung der Robot-Klasse
     Robot robot;
+    // Image zum bearbeiten des Screenshots
     BufferedImage image;
     
     
-    
+    /**
+     * Konstruktor.
+     * Initialisiert die Robot Klasse und holt den Screenshot.
+     */
     public CardChecker() {
         // Initialisiere Robot Objekt fuer Methodenbereitstellung 
         try {
             robot = new Robot();
         } catch (AWTException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        // Hole Screenshot
+        // schiesse Screenshot
         image = robot.createScreenCapture(rectangle);
     }
 
@@ -39,7 +49,7 @@ public class CardChecker {
      */
     public static int ermittelWert(BufferedImage image, int anpasser,
             int eigenerAnpasser) {
-        // Zaehlvariable fuer durchgelaufene Pixel != weiß
+        // Zaehlvariable fuer durchgelaufene Pixel, die ungleich weiss sind
         int count = 0;
         // Schleifen laufen Pixel in einem Rechteck ab
         for (int i = 274 + anpasser; i < 287 + anpasser; i++) {
@@ -73,9 +83,7 @@ public class CardChecker {
                             && count == 0) {
                         return 13;
                     }
-
                     // Pruefe weiter
-
                     if ((i == 277 + anpasser) && (j == 187 + eigenerAnpasser)
                             && count == 2) {
                         return 4;
@@ -84,16 +92,12 @@ public class CardChecker {
                             && count == 2) {
                         return 9;
                     }
-
                     // und weiter
-
                     if ((i == 276 + anpasser) && (j == 191 + eigenerAnpasser)
                             && count == 4) {
                         return 10;
                     }
-
                     // und weiter
-
                     if ((i == 278 + anpasser) && (j == 190 + eigenerAnpasser)
                             && count == 5) {
                         return 3;
@@ -102,9 +106,7 @@ public class CardChecker {
                             && count == 5) {
                         return 5;
                     }
-
                     // spaetestens beim 11. Durchgang sollte der Wert gefunden sein
-                    
                     if ((i == 278 + anpasser) && (j == 189 + eigenerAnpasser)
                             && count == 10) {
                         return 6;
@@ -136,6 +138,8 @@ public class CardChecker {
             int anpasser = 0;
             // Initialisiere Y-Anpassung fuer eigene Karten
             int eigenerAnpasser = 0;
+            // Schleifen pruefen ob Karten ausgespielt wurden. 
+            // Wenn ja, ist der Pruefpixel nicht mit gruener Feldfarbe gefuellt
             for (int i = 1; i < 6; i++) {
                 if (image.getRGB(274 + anpasser, 202) != -1) {
                     if (image.getRGB(274 + anpasser, 202) == -14109143

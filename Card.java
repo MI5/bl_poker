@@ -28,6 +28,8 @@ public class Card {
     
     /**
      * toString Methode.
+     * Ermoeglicht eine anschauliche Darstellung der Spielkarte.
+     * @return String
      */
     public String toString() {
         if (wert > 9)
