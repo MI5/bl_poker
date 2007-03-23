@@ -2,95 +2,71 @@ import java.net.*;
 import java.io.*;
 
 /**
- * Klasse Client.
- * Ermoeglicht Kommunikation mit dem Poker-Partner.
+ * Klasse Client. Ermoeglicht Kommunikation mit dem Poker-Partner.
+ * 
  * @author Christian
- *
+ * 
  */
 public class Client {
-    
+
     // Variable fuer Socket
     private Socket server;
+
     // InputStream fuer Verbindung
     private InputStream in;
+
     // OutputStream fuer Verbindung
     private OutputStream out;
+
     // zu uebertragene Information (Karten auf der Hand)
-    private String msg;
+    private String sendString;
+
     // Array fuer Zerlegung in einzelne Zeichen
     private byte[] b = new byte[100];
 
     /**
-     * Konstuktor.
-     * Erzeugt einen Client mit uebergebener Zeichenkette.
-     * @param msg zu uebertragene Zeichenkette.
+     * Konstuktor. Erzeugt einen Client mit uebergebener Zeichenkette.
+     * 
+     * @param msg
+     *            zu uebertragene Zeichenkette.
      */
-    public Client(String msg) {
-        this.msg = msg;
-    }
-    
-    
-    
-    /**
-     * Baut Verbindung mit dem Server auf und probiert dies solange bis die
-     * Verbindung hergestellt wurde.
-     */
-    public void connect() {
-        // Preufvariable ob Verbindung hergestellt
-        boolean connected = false;
-        System.out.println("Versuche Daten auszutauschen");
-        while (!connected) {
-            connected = true;
-            try {
-                // Socket an Port 4712
-                server = new Socket("becks.dnsalias.com", 4712);
-                System.out.println("Verbunden mit " + server.getInetAddress());
-
-                // InputStream erzeugen
-                in = server.getInputStream();
-            } catch (IOException e) {
-                // Gab es eine Exception, konnte Verbindung nicht hergestellt
-                // werden.
-                // Versuche es also erneut.
-                if (e instanceof ConnectException) {
-                    connected = false;
-                }
-            }
-        }
-
+    public Client(String sendString) {
+        this.sendString = sendString;
     }
 
     /**
      * Sendet die eigenen Karten an den Poker-Partner.
      */
     public String send() {
-        // Connecte mit dem Poker-Server
-        connect();
-
-        b = msg.getBytes();
+        // wandel den String in Zeichen um
+        b = sendString.getBytes();
         try {
-
+            // SocketVerbindung herstellen
+            server = new Socket();
+            // Und zwar an der Addresse
+            SocketAddress addr = new InetSocketAddress("becks.dnsalias.com",
+                    4712);
+            // und nun verbinde
+            server.connect(addr, 2000);
             // hole Outputstream vom Server
             out = server.getOutputStream();
             // Schreibe die Karten hinein
             out.write(b);
             // schließe den Outputstream
             out.flush();
+            // InputStream erzeugen
+            in = server.getInputStream();
+            // ausgetauschte Informationen auslesen
             in.read(b);
-            
-        } catch (IOException e1) {
-            e1.printStackTrace();
+            // Byte-Array in String umwandeln
+            sendString = new String(b);
+
+        } catch (Exception e1) {
+            // Melde bei Fehlern
+            sendString = "error";
         }
 
-        // Byte-Array in String umwandeln
-        msg = new String(b);
-        // Nachricht des Server ausgeben
-        System.out.println("Server : " + msg);
-        return msg;
+        return sendString;
     }
-    
-    
 
-    
-    
 }

@@ -9,6 +9,7 @@ import java.io.*;
  */
 public class Server {
     
+    // der zu sendene String mit Karteninformationen
     private String sendString;
 
     /**
@@ -25,10 +26,11 @@ public class Server {
     public String send() {
 
         try {
-
             // Socket an Port 4712 erstellen
             ServerSocket serverSock = new ServerSocket(4712);
-            // Warte, bis Verbindung hergestellt ist.
+            // Warte höchstens 2 Sekunden auf Verbindung
+            serverSock.setSoTimeout(2000);
+            // Jetzt sitze diese Zeit ab.
             Socket client = serverSock.accept();
             // hole Outputstream
             OutputStream out = client.getOutputStream();
@@ -37,27 +39,14 @@ public class Server {
             // schreibe Daten auf den Outputstream
             out.write(b);
             out.flush();
-            // hole den Inputstream
+            // hole den Inputstream und lese ihn aus
             InputStream in = client.getInputStream();
             in.read(b);
-            System.out.println("Client antwortet : " + new String(b));
             return new String(b);
-
-            
-            
-        } catch (IOException e) {
-            System.err.println("Fehler\n" + e);
-            System.exit(1);
+        // konnten die Karten nicht uebertragen werden, gebe Fehler aus
+        } catch (Exception e) {
+            sendString = "error";
         }
         return sendString;
     }
-    
-    
-//    public static void main(String[] args) {
-//        //Testmethode
-//        Server s = new Server("s04h10");
-//        s.send();
-//    }
-    
-
 }

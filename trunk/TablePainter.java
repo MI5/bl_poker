@@ -62,9 +62,11 @@ public class TablePainter extends JPanel {
         g.drawString(ownCards.toString(), 10, 23);
         g.drawString("Mitspieler Karten", 10, 53);
         g.drawString(playerCards.toString(), 10, 66);
-        g.drawString("Informationen: "+info, 10, 103);
+        g.drawString("Informationen: ", 10, 103);
+        g.drawString(info, 10, 116);
         
         
     }
 
 }
+

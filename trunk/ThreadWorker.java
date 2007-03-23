@@ -1,60 +1,59 @@
 import java.util.LinkedList;
 
-
+/**
+ * Klasse ThreadWorker. 
+ * Ermoeglicht voll automatische KartenUpdates.
+ * @author Christian
+ *
+ */
 public class ThreadWorker implements Runnable {
 
+    /**
+     * Thread wird gestartet.
+     */
     public void run() {
+        // erzeuge Table-Instanz 
         Table table = new Table();
+        // Pruefvariable auf Fold
         boolean fold = false;
+        // Liste fuer eigene Karten
         LinkedList<Card> cards = new LinkedList<Card>();
-        //CardChecker card = new CardChecker();
+        // lese eigene Karten aus
         cards = table.check.getOwnCards();
-        System.out.println("Ueberpruefung startet jetzt");
         while(true) {
+            // Scanne permanent den Tisch
             table.check = new CardChecker();
-//            System.out.println(card.getOwnCards().toString());
-//            System.out.println(cards.toString());
-//            System.out.println(card.getOwnCards().toString().replaceAll("0", "").length());
-            // Nichts neues
+            // Gibt es Veraenderungen?
             if (cards.toString().equals(table.check.getOwnCards().toString())) {
                 try {
+                    // Wenn nein, schlafe 2 Sekunden
                     Thread.sleep(2000);
-                    
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
             // Neue Karten auf der Hand?
             else if (table.check.getOwnCards().toString().replaceAll("0", "").length() > 7) {
-//                System.out.println("WECHSEL mit");
-//                System.out.println(cards.toString());
-//                System.out.println(table.check.getOwnCards().toString());
-//                System.out.println(table.check.getOwnCards().toString().replaceAll("0", "").length());
+                // Lese neue Karten aus
                 cards = table.check.getOwnCards();
                 table.refresh();
                 fold = false;
-                System.out.println("Sende meine neuen Karten");
-//                table.sendClient();
-                table.sendServer();
+
+                table.sendClient();
+//                table.sendServer();
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 table.sendClient();
+//                table.sendServer();
                 
             }
-            // Wird gefoldet?
+            // Pruefe auf Fold. Fuer spaetere Verwendung
             else if (table.check.getOwnCards().toString().replaceAll("0", "").length() == 2 && fold == false) {
-                table.refresh();
-//                System.out.println("FOLD");
-//                System.out.println("WECHSEL mit");
-//                System.out.println(cards.toString());
-//                System.out.println(card.getOwnCards().toString());
-                
-                cards = table.check.getOwnCards();
+//                table.refresh();
+                //cards = table.check.getOwnCards();
                 fold = true;
                 
             }
