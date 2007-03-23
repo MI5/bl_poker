@@ -9,57 +9,50 @@ import javax.swing.JFrame;
 
 import javax.swing.JPanel;
 
-
-
- /**
- * Klasse Table.
- * Repraesentiert den Pokertisch mit Spielern und Karten.
+/**
+ * Klasse Table. Repraesentiert den Pokertisch mit Spielern und Karten.
  * Hauptklasse. Ohne die laueft nichts. :)
+ * 
  * @author Christian
- *
+ * 
  */
 public class Table {
-    
+
     private CardSet cards = new CardSet();
+
     private JFrame frame;
-    TablePainter painter = new TablePainter(); 
+
+    TablePainter painter = new TablePainter();
+
     private LinkedList<Card> playerCards = new LinkedList<Card>();
 
     CardChecker check;
-    
+
     /**
-     * Konstruktor.
-     * Erstellt ein JFrame.
+     * Konstruktor. Erstellt ein JFrame.
      */
     public Table() {
-        
+        // Initialisiere den CardChecker
         check = new CardChecker();
-        
-        
-//      erstellt neue JFrameInstanz mit Titel "PokerLauncher"
-        frame = new JFrame("Poker Launcher V0.1");
+        // erstellt neue JFrameInstanz mit Titel "PokerLauncher"
+        frame = new JFrame("Poker Launcher V0.2");
         // ermoeglicht das Beenden ueber Klicken auf das Kreuz rechts oben
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // setzt die Groesse des JFrame
         frame.setSize(202, 200);
-        // passt die Koordinaten an, damit das Frame nicht ueber dem Pokerfenster liegt.
+        // passt die Koordinaten an, damit das Frame nicht ueber dem
+        // Pokerfenster liegt.
         frame.setLocation(818, 0);
         // jetzt kann man es auch sehen. :)
         frame.getContentPane().add(getButtons(), BorderLayout.NORTH);
-        
-        
-
-        
+        // fuege die Zeichenklasse hinzu
         frame.getContentPane().add(painter, BorderLayout.CENTER);
-       
-
-        
         frame.setVisible(true);
     }
-    
-    
+
     /**
      * Erstellt ein JPanel mit 2 Buttons fuer Karten senden und Beenden.
+     * 
      * @return JPanel mit den Buttons.
      */
     public JPanel getButtons() {
@@ -75,151 +68,103 @@ public class Table {
         // fuege fuer jeden Button einen Listener hinzu
         send.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                // SERVER:
-//                Server server;
-//                if (check.getOwnCards().size() == 0) { 
-//                    server = new Server("nocard");
-//                }
-//                else {
-//                    server = new Server(check.getOwnCards().getFirst().toString()+check.getOwnCards().getLast().toString());
-//                }
-//                String msg = server.send();
-                
-//                // CLIENT
-//                Client client;
-//                if (check.getOwnCards().size() == 0) { 
-//                    client = new Client("nocard");
-//                }
-//                else {
-//                    client = new Client(check.getOwnCards().getFirst().toString()+check.getOwnCards().getLast().toString());
-//                }
-//                String msg = client.send();
-//                
-//                
-//                playerCards = new LinkedList<Card>();
-//                playerCards.add(new Card(msg.substring(0, 1),new Integer(msg.substring(1,3)).intValue()));
-//                playerCards.add(new Card(msg.substring(3, 4),new Integer(msg.substring(4,6)).intValue()));
-//                
-//                check = new CardChecker();
-//                painter.removeAll();
-//                painter.setOwnCards(check.getOwnCards());
-//                painter.setTableCards(check.getTableCards());
-//                painter.setPlayerCards(playerCards);
-//                painter.repaint();
-//                System.out.println(playerCards.toString());
-                
-                
-
             }
         });
         refresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                // Refreshe den Screenshot
-//                check = new CardChecker();
-//                painter.removeAll();
-//                painter.setOwnCards(check.getOwnCards());
-//                painter.setTableCards(check.getTableCards());
-//                painter.setPlayerCards(playerCards);
-//                painter.repaint();
-
-                
-                
-
             }
         });
         return buttons;
     }
 
+    /**
+     * Aktualisiert das JPanel.
+     */
     public void refresh() {
         // Refreshe den Screenshot
         check = new CardChecker();
+        // entferne alle alten Elemente
         painter.removeAll();
         painter.setOwnCards(check.getOwnCards());
         painter.setTableCards(check.getTableCards());
         painter.setPlayerCards(playerCards);
+        // und zeichne neu
         painter.repaint();
-
-        
     }
 
+    /**
+     * Aktualisiert die Informationen.
+     * 
+     * @param info
+     *            neue Infotmationen
+     */
+    public void refreshInfo(String info) {
+        painter.setInfo(info);
+        painter.removeAll();
+        painter.repaint();
+    }
+
+    /**
+     * Ermoeglicht den Informationsaustausch als Client.
+     * 
+     */
     public void sendClient() {
-        // CLIENT
         Client client;
-        if (check.getOwnCards().size() == 0) { 
+        // Pruefe ob man Karten besitzt
+        if (check.getOwnCards().size() == 0) {
             client = new Client("nocard");
+        } else {
+            // wenn ja erstelle Uebertragungsstring
+            client = new Client(check.getOwnCards().getFirst().toString()
+                    + check.getOwnCards().getLast().toString());
         }
-        else {
-            client = new Client(check.getOwnCards().getFirst().toString()+check.getOwnCards().getLast().toString());
-        }
-        painter.removeAll();
-        painter.repaint();
-        painter.setInfo("Uebertrage Daten");
+        // Gebe Informationen aus und verbinde
+        refreshInfo("Uebertrage Daten");
         String msg = client.send();
-        
-        
-        
-        playerCards = new LinkedList<Card>();
-        playerCards.add(new Card(msg.substring(0, 1),new Integer(msg.substring(1,3)).intValue()));
-        playerCards.add(new Card(msg.substring(3, 4),new Integer(msg.substring(4,6)).intValue()));
-        
-        check = new CardChecker();
-        painter.removeAll();
-        painter.setOwnCards(check.getOwnCards());
-        painter.setTableCards(check.getTableCards());
-        painter.setPlayerCards(playerCards);
-        painter.repaint();
-        System.out.println(playerCards.toString());
+        refreshInfo("Uebertragung erfolgreich");
+        // Gab es einen Fehler, setze Information
+        // Ansonsten verarbeite die neuen Karteninforamtionen
+        if (!msg.equals("error")) {
+            playerCards = new LinkedList<Card>();
+            playerCards.add(new Card(msg.substring(0, 1), new Integer(msg
+                    .substring(1, 3)).intValue()));
+            playerCards.add(new Card(msg.substring(3, 4), new Integer(msg
+                    .substring(4, 6)).intValue()));
+        } else {
+            painter.setInfo("Fehler beim Senden");
+        }
+        refresh();
     }
 
+    /**
+     * Startet Datenuebertragung als Server.
+     */
     public void sendServer() {
-        // SERVER:
-      Server server;
-      if (check.getOwnCards().size() == 0) { 
-          server = new Server("nocard");
-      }
-      else {
-          server = new Server(check.getOwnCards().getFirst().toString()+check.getOwnCards().getLast().toString());
-      }
-      String msg = server.send();
-      
-      // CLIENT
-//      Client client;
-//      if (check.getOwnCards().size() == 0) { 
-//          client = new Client("nocard");
-//      }
-//      else {
-//          client = new Client(check.getOwnCards().getFirst().toString()+check.getOwnCards().getLast().toString());
-//      }
-//      String msg = client.send();
-      
-      
-      playerCards = new LinkedList<Card>();
-      playerCards.add(new Card(msg.substring(0, 1),new Integer(msg.substring(1,3)).intValue()));
-      playerCards.add(new Card(msg.substring(3, 4),new Integer(msg.substring(4,6)).intValue()));
-      
-      check = new CardChecker();
-      painter.removeAll();
-      painter.setOwnCards(check.getOwnCards());
-      painter.setTableCards(check.getTableCards());
-      painter.setPlayerCards(playerCards);
-      painter.repaint();
-      System.out.println(playerCards.toString());
-      
-      
-
+        Server server;
+        // pruefe auf Karten
+        if (check.getOwnCards().size() == 0) {
+            server = new Server("nocard");
+        } else {
+            // wenn ja erstelle Uebertragungsstring
+            server = new Server(check.getOwnCards().getFirst().toString()
+                    + check.getOwnCards().getLast().toString());
+        }
+        // Gebe Informationen aus und verbinde
+        refreshInfo("Uebertrage Daten");
+        String msg = server.send();
+        refreshInfo("Uebertragung erfolgreich");
+        // Gab es einen Fehler, setze Information
+        // Ansonsten verarbeite die neuen Karteninforamtionen
+        if (!msg.equals("error")) {
+            playerCards = new LinkedList<Card>();
+            playerCards.add(new Card(msg.substring(0, 1), new Integer(msg
+                    .substring(1, 3)).intValue()));
+            playerCards.add(new Card(msg.substring(3, 4), new Integer(msg
+                    .substring(4, 6)).intValue()));
+        } else {
+            painter.setInfo("Fehler beim Senden");
+        }
+        refresh();
     }
-    
-    
-    
-//    public static void main(String[] args) {
-//        Table table = new Table();
-        //table.check = new CardChecker();
-//        System.out.println("Eigene Karten");
-//        System.out.println(table.check.getOwnCards().toString());
-//        System.out.println("Tischkarten");
-//        System.out.println(table.check.getTableCards().toString());
-        //System.out.println(check.toString());
-//    }
-    
 
 }
