@@ -111,37 +111,37 @@ public class Table {
         painter.repaint();
     }
 
-    /**
-     * Ermoeglicht den Informationsaustausch als Client.
-     * 
-     */
-    public void sendClient() {
-        Client client;
-        // Pruefe ob man Karten besitzt
-        if (check.getOwnCards().size() == 0) {
-            client = new Client("nocard");
-        } else {
-            // wenn ja erstelle Uebertragungsstring
-            client = new Client(check.getOwnCards().getFirst().toString()
-                    + check.getOwnCards().getLast().toString());
-        }
-        // Gebe Informationen aus und verbinde
-        refreshInfo("Uebertrage Daten");
-        String msg = client.send();
-        refreshInfo("Uebertragung erfolgreich");
-        // Gab es einen Fehler, setze Information
-        // Ansonsten verarbeite die neuen Karteninforamtionen
-        if (!msg.equals("error")) {
-            playerCards = new LinkedList<Card>();
-            playerCards.add(new Card(msg.substring(0, 1), new Integer(msg
-                    .substring(1, 3)).intValue()));
-            playerCards.add(new Card(msg.substring(3, 4), new Integer(msg
-                    .substring(4, 6)).intValue()));
-        } else {
-            painter.setInfo("Fehler beim Senden");
-        }
-        refresh();
-    }
+//    /**
+//     * Ermoeglicht den Informationsaustausch als Client.
+//     * 
+//     */
+//    public void sendClient() {
+//        Client client;
+//        // Pruefe ob man Karten besitzt
+//        if (check.getOwnCards().size() == 0) {
+//            client = new Client("nocard");
+//        } else {
+//            // wenn ja erstelle Uebertragungsstring
+//            client = new Client(check.getOwnCards().getFirst().toString()
+//                    + check.getOwnCards().getLast().toString());
+//        }
+//        // Gebe Informationen aus und verbinde
+//        refreshInfo("Uebertrage Daten");
+//        String msg = client.send();
+//        refreshInfo("Uebertragung erfolgreich");
+//        // Gab es einen Fehler, setze Information
+//        // Ansonsten verarbeite die neuen Karteninforamtionen
+//        if (!msg.equals("error")) {
+//            playerCards = new LinkedList<Card>();
+//            playerCards.add(new Card(msg.substring(0, 1), new Integer(msg
+//                    .substring(1, 3)).intValue()));
+//            playerCards.add(new Card(msg.substring(3, 4), new Integer(msg
+//                    .substring(4, 6)).intValue()));
+//        } else {
+//            painter.setInfo("Fehler beim Senden");
+//        }
+//        refresh();
+//    }
     
     public void sendNewClient() {
         String msg;
@@ -167,11 +167,15 @@ public class Table {
      * @param info Neue Karten
      */
     public void newInfo(String msg) {
+        LinkedList<Card> playerCardsTemp = playerCards;
         playerCards = new LinkedList<Card>();
         playerCards.add(new Card(msg.substring(0, 1), new Integer(msg
                 .substring(1, 3)).intValue()));
         playerCards.add(new Card(msg.substring(3, 4), new Integer(msg
                 .substring(4, 6)).intValue()));
+        if (playerCards.equals(check.getOwnCards())) {
+            playerCards = playerCardsTemp;
+        }
         refresh();
     }
     
