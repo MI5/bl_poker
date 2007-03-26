@@ -38,25 +38,9 @@ public class ThreadWorker implements Runnable {
                 cards = table.check.getOwnCards();
                 table.refresh();
                 fold = false;
-
                 // Aenderung! Man hat neue Karten bekommen was passiert?
                 // Man schickt Sie an den Partner durch:
-                //
-                
                 table.sendNewClient();
-                
-//                table.sendClient();
-//                table.sendServer();
-//                try {
-//                    Thread.sleep(2000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                table.sendClient();
-//                table.sendServer();
-            
-                
-                
             }
             // Pruefe auf Fold. Fuer spaetere Verwendung
             else if (table.check.getOwnCards().toString().replaceAll("0", "").length() == 2 && fold == false) {

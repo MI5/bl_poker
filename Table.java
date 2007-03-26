@@ -50,9 +50,6 @@ public class Table {
         // fuege die Zeichenklasse hinzu
         frame.getContentPane().add(painter, BorderLayout.CENTER);
         frame.setVisible(true);
-        
-        
-        
         // VERÄNDERUNG Table startet Empfangsthread
         c = new PokerClient(this);
         Thread t1 = new Thread(c);
@@ -77,6 +74,7 @@ public class Table {
         // fuege fuer jeden Button einen Listener hinzu
         send.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
+                
             }
         });
         refresh.addActionListener(new ActionListener() {
