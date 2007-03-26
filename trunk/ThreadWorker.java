@@ -39,15 +39,23 @@ public class ThreadWorker implements Runnable {
                 table.refresh();
                 fold = false;
 
-                table.sendClient();
+                // Aenderung! Man hat neue Karten bekommen was passiert?
+                // Man schickt Sie an den Partner durch:
+                //
+                
+                table.sendNewClient();
+                
+//                table.sendClient();
 //                table.sendServer();
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                table.sendClient();
+//                try {
+//                    Thread.sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                table.sendClient();
 //                table.sendServer();
+            
+                
                 
             }
             // Pruefe auf Fold. Fuer spaetere Verwendung
