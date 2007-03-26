@@ -27,6 +27,8 @@ public class Table {
     private LinkedList<Card> playerCards = new LinkedList<Card>();
 
     CardChecker check;
+    
+    PokerClient c;
 
     /**
      * Konstruktor. Erstellt ein JFrame.
@@ -48,6 +50,13 @@ public class Table {
         // fuege die Zeichenklasse hinzu
         frame.getContentPane().add(painter, BorderLayout.CENTER);
         frame.setVisible(true);
+        
+        
+        
+        // VERÄNDERUNG Table startet Empfangsthread
+        c = new PokerClient(this);
+        Thread t1 = new Thread(c);
+        t1.start();
     }
 
     /**
@@ -135,36 +144,69 @@ public class Table {
         }
         refresh();
     }
+    
+    public void sendNewClient() {
+        String msg;
+        // Pruefe ob man Karten besitzt
+        if (check.getOwnCards().size() == 0) {
+            msg = "nocard";
+        } else {
+            // wenn ja erstelle Uebertragungsstring
+            msg = check.getOwnCards().getFirst().toString()
+                    + check.getOwnCards().getLast().toString();
+        }
+        // Gebe Informationen aus und verbinde
+        refreshInfo("Uebertrage Daten");
+        c.send(msg);
+        refreshInfo("Uebertragung erfolgreich");
+
+        refresh();
+    }
+    
+    /**
+     * Diese Methode wird von PokerClient aufgerufen und teilt die Empfangenen
+     * Daten mit. D.h. es erfolgt eine automatische Aktualisierung.
+     * @param info Neue Karten
+     */
+    public void newInfo(String msg) {
+        playerCards = new LinkedList<Card>();
+        playerCards.add(new Card(msg.substring(0, 1), new Integer(msg
+                .substring(1, 3)).intValue()));
+        playerCards.add(new Card(msg.substring(3, 4), new Integer(msg
+                .substring(4, 6)).intValue()));
+        refresh();
+    }
+    
 
     /**
      * Startet Datenuebertragung als Server.
      */
-    public void sendServer() {
-        Server server;
-        // pruefe auf Karten
-        if (check.getOwnCards().size() == 0) {
-            server = new Server("nocard");
-        } else {
-            // wenn ja erstelle Uebertragungsstring
-            server = new Server(check.getOwnCards().getFirst().toString()
-                    + check.getOwnCards().getLast().toString());
-        }
-        // Gebe Informationen aus und verbinde
-        refreshInfo("Uebertrage Daten");
-        String msg = server.send();
-        refreshInfo("Uebertragung erfolgreich");
-        // Gab es einen Fehler, setze Information
-        // Ansonsten verarbeite die neuen Karteninforamtionen
-        if (!msg.equals("error")) {
-            playerCards = new LinkedList<Card>();
-            playerCards.add(new Card(msg.substring(0, 1), new Integer(msg
-                    .substring(1, 3)).intValue()));
-            playerCards.add(new Card(msg.substring(3, 4), new Integer(msg
-                    .substring(4, 6)).intValue()));
-        } else {
-            painter.setInfo("Fehler beim Senden");
-        }
-        refresh();
-    }
+//    public void sendServer() {
+//        Server server;
+//        // pruefe auf Karten
+//        if (check.getOwnCards().size() == 0) {
+//            server = new Server("nocard");
+//        } else {
+//            // wenn ja erstelle Uebertragungsstring
+//            server = new Server(check.getOwnCards().getFirst().toString()
+//                    + check.getOwnCards().getLast().toString());
+//        }
+//        // Gebe Informationen aus und verbinde
+//        refreshInfo("Uebertrage Daten");
+//        String msg = server.send();
+//        refreshInfo("Uebertragung erfolgreich");
+//        // Gab es einen Fehler, setze Information
+//        // Ansonsten verarbeite die neuen Karteninforamtionen
+//        if (!msg.equals("error")) {
+//            playerCards = new LinkedList<Card>();
+//            playerCards.add(new Card(msg.substring(0, 1), new Integer(msg
+//                    .substring(1, 3)).intValue()));
+//            playerCards.add(new Card(msg.substring(3, 4), new Integer(msg
+//                    .substring(4, 6)).intValue()));
+//        } else {
+//            painter.setInfo("Fehler beim Senden");
+//        }
+//        refresh();
+//    }
 
 }
