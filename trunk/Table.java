@@ -49,12 +49,12 @@ public class Table {
         // passt die Koordinaten an, damit das Frame nicht ueber dem
         // Pokerfenster liegt.
         frame.setLocation(818, 0);
-        // jetzt kann man es auch sehen. :)
-        frame.setVisible(true);
         frame.getContentPane().add(getButtons(), BorderLayout.NORTH);
         // fuege die Zeichenklasse hinzu
         frame.getContentPane().add(painter, BorderLayout.CENTER);
         frame.setResizable(false);
+        // jetzt kann man es auch sehen. :)
+        frame.setVisible(true);
         //initializeFrame();
         // VERÄNDERUNG Table startet Empfangsthread
         c = new PokerClient(this);
