@@ -41,7 +41,7 @@ public class Table {
         // Initialisiere den CardChecker
         check = new CardChecker();
         // erstellt neue JFrameInstanz mit Titel "PokerLauncher"
-        frame = new JFrame("Poker Launcher V0.4");
+        frame = new JFrame("PokerLauncher V0.4b");
         // ermoeglicht das Beenden ueber Klicken auf das Kreuz rechts oben
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // setzt die Groesse des JFrame
