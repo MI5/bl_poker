@@ -112,7 +112,11 @@ public class Table {
         refresh();
     }
 
-    
+    /**
+     * Diese Methode erstellt den zu sendenden Informations-String zusammen
+     * und leitet diesen an den PokerClient weiter, der die Nachricht
+     * letztendlich abschickt. 
+     */
     public void sendNewClient() {
         String msg;
         // Pruefe ob man Karten besitzt
@@ -123,7 +127,7 @@ public class Table {
             msg = check.getOwnCards().getFirst().toString()
                     + check.getOwnCards().getLast().toString();
         }
-        // Gebe Informationen aus und verbinde
+        // Gebe Informationen aus und versende
         refreshInfo("Uebertrage Daten");
         c.send(msg);
         refreshInfo("Uebertragung erfolgreich");
@@ -135,63 +139,22 @@ public class Table {
      * @param info Neue Karten
      */
     public void newInfo(String msg) {
+        // Bevor die wirklichen Karten veraendert werde, pruefe ob man sie
+        // auch veraendern muss!
+        // initialisiere also eine temporaere Liste
         LinkedList<Card> playerCardsTemp = new LinkedList<Card>();
         playerCardsTemp.add(new Card(msg.substring(0, 1), new Integer(msg
                 .substring(1, 3)).intValue()));
         playerCardsTemp.add(new Card(msg.substring(3, 4), new Integer(msg
                 .substring(4, 6)).intValue()));
-        
-        
-        
-        
-        
-//        System.out.println("Vergleich: "+playerCards.toString().equals(check.getOwnCards().toString()));
-//        
-//        System.out.println("SpielerKarten:" +playerCards.toString());
-//        System.out.println("Eigene Karten:" +check.getOwnCards().toString());
-//        System.out.println("PlayerCardsTemp" +playerCardsTemp.toString());
+        // und pruefe nun, ob die eigenen Karten mit den emfangenen Karten
+        // uebereinstimmen. Leider erhaelt man ja auch seine eigenen Karten
+        // also Informationsstring
         if (!playerCardsTemp.toString().equals(check.getOwnCards().toString())) {
-//            playerCards = playerCardsTemp;
+            // Sie stimmen nicht ueberein, d.h. die richtigen Karten von
+            // dem Mitspieler sind angekommen
             playerCards = playerCardsTemp;
             refresh();
-            System.out.println("refresh");
-//            System.out.println("kein refresh");
-//            System.out.println("SpielerKarten:" +playerCards.toString());
-//            System.out.println("Eigene Karten:" +check.getOwnCards().toString());
-//            System.out.println("PlayerCardsTemp" +playerCardsTemp.toString());
         }
     }
-    
-
-    /**
-     * Startet Datenuebertragung als Server.
-     */
-//    public void sendServer() {
-//        Server server;
-//        // pruefe auf Karten
-//        if (check.getOwnCards().size() == 0) {
-//            server = new Server("nocard");
-//        } else {
-//            // wenn ja erstelle Uebertragungsstring
-//            server = new Server(check.getOwnCards().getFirst().toString()
-//                    + check.getOwnCards().getLast().toString());
-//        }
-//        // Gebe Informationen aus und verbinde
-//        refreshInfo("Uebertrage Daten");
-//        String msg = server.send();
-//        refreshInfo("Uebertragung erfolgreich");
-//        // Gab es einen Fehler, setze Information
-//        // Ansonsten verarbeite die neuen Karteninforamtionen
-//        if (!msg.equals("error")) {
-//            playerCards = new LinkedList<Card>();
-//            playerCards.add(new Card(msg.substring(0, 1), new Integer(msg
-//                    .substring(1, 3)).intValue()));
-//            playerCards.add(new Card(msg.substring(3, 4), new Integer(msg
-//                    .substring(4, 6)).intValue()));
-//        } else {
-//            painter.setInfo("Fehler beim Senden");
-//        }
-//        refresh();
-//    }
-
 }
