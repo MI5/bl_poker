@@ -60,8 +60,8 @@ public class PokerClient implements Runnable{
                 if (msg.length() > 1) {
                     System.out.println(msg);
                     table.newInfo(msg);
-                    
                 }
+                Thread.sleep(100);
             }
         } catch (Exception e) {
             System.out.println("\nFehler\n" + e + "\n");

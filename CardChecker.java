@@ -40,6 +40,21 @@ public class CardChecker {
         image = robot.createScreenCapture(rectangle);
     }
 
+    
+    /**
+     * Methode prueft ob Handkarten richtig ausgelesen wurden.
+     * @return true wenn ja
+     */
+    public boolean validCards() {
+        if (ownCards.toString().replaceAll("0", "").length() < 8) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    
+    
     /**
      * Ermittelt Kartenwert.
      * @param image Screenshot
@@ -47,7 +62,7 @@ public class CardChecker {
      * @param eigenerAnpasser y-Anpassung fuer eigene Karten
      * @return Wert der Karte
      */
-    public static int ermittelWert(BufferedImage image, int anpasser,
+    public int ermittelWert(BufferedImage image, int anpasser,
             int eigenerAnpasser) {
         // Zaehlvariable fuer durchgelaufene Pixel, die ungleich weiss sind
         int count = 0;

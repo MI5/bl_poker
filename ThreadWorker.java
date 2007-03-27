@@ -24,7 +24,7 @@ public class ThreadWorker implements Runnable {
             // Scanne permanent den Tisch
             table.check = new CardChecker();
             // Gibt es Veraenderungen?
-            if (cards.toString().equals(table.check.getOwnCards().toString())) {
+            if (cards.toString().equals(table.check.getOwnCards().toString()) && table.check.validCards()) {
                 try {
                     // Wenn nein, schlafe 2 Sekunden
                     Thread.sleep(2000);
@@ -48,6 +48,12 @@ public class ThreadWorker implements Runnable {
                 //cards = table.check.getOwnCards();
                 fold = true;
                 
+            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
             
             
