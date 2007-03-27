@@ -23,8 +23,9 @@ public class ThreadWorker implements Runnable {
         while(true) {
             // Scanne permanent den Tisch
             table.check = new CardChecker();
+            table.refresh();
             // Gibt es Veraenderungen?
-            if (cards.toString().equals(table.check.getOwnCards().toString()) && table.check.validCards()) {
+            if (cards.toString().equals(table.check.getOwnCards().toString())) {
                 try {
                     // Wenn nein, schlafe 2 Sekunden
                     Thread.sleep(2000);
@@ -47,6 +48,7 @@ public class ThreadWorker implements Runnable {
 //                table.refresh();
                 //cards = table.check.getOwnCards();
                 fold = true;
+                System.out.println("FOLD");
                 
             }
             try {

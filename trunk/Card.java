@@ -38,4 +38,18 @@ public class Card {
             return farbe+"0"+wert;
     }
 
+    /**
+     * Methode prueft, ob die Karte korrekt ist.
+     * @return true wenn ja
+     */
+    public boolean isValidCard() {
+        if (wert < 2) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    
+    
 }

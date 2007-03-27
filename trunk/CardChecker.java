@@ -41,16 +41,52 @@ public class CardChecker {
     }
 
     
+//    /**
+//     * Methode prueft ob Handkarten richtig ausgelesen wurden.
+//     * @return true wenn ja
+//     */
+//    public boolean validCards() {
+//        if (ownCards.toString().replaceAll("0", "").length() < 8) {
+//            return false;
+//        }
+//        else {
+//            return true;
+//        }
+//    }
+    
     /**
-     * Methode prueft ob Handkarten richtig ausgelesen wurden.
-     * @return true wenn ja
+     * Methode prueft, ob die ausgespielten Karten richtig ausgelesen wurden.
+     * Wenn nicht, wird automatisch korrigiert
      */
-    public boolean validCards() {
-        if (ownCards.toString().replaceAll("0", "").length() < 8) {
-            return false;
+    public void checkTableCards() {
+        for (int i = 0; i < tableCards.size(); i++) {
+            if (!tableCards.get(i).isValidCard()) {
+                tableCards.remove(i);
+                i--;
+            }
+            if (tableCards.size() < 3) {
+                tableCards = new LinkedList<Card>();
+            }
+            
         }
-        else {
-            return true;
+    }
+    
+    
+    
+    /**
+     * Methode prueft, ob die eigenen Karten richtig ausgelesen wurden.
+     * Wenn nicht, wird automatisch korrigiert
+     */
+    public void checkOwnCards() {
+        for (int i = 0; i < ownCards.size(); i++) {
+            if (!ownCards.get(i).isValidCard()) {
+                ownCards.remove(i);
+                i--;
+            }
+            if (ownCards.size() < 2) {
+                ownCards = new LinkedList<Card>();
+            }
+            
         }
     }
     
@@ -163,11 +199,12 @@ public class CardChecker {
                             || image.getRGB(274 + anpasser, 202) == -14714079
                             || image.getRGB(274 + anpasser, 202) == -14372570) {
                         // Noch keine Karte ausgespielt. Not a card
-                        tableCards.addLast(new Card("N", 0));
+                        //tableCards.addLast(new Card("N", 0));
                     } else {
                         // Karo bestimmt, ermittel Wert.
                         tableCards.addLast(new Card("d", ermittelWert(image, anpasser,
                                 eigenerAnpasser)));
+                        
                     }
                 } else if (image.getRGB(275 + anpasser, 198) != -1) {
                     if (image.getRGB(275 + anpasser, 198) == -14240472
@@ -176,7 +213,7 @@ public class CardChecker {
                             || image.getRGB(275 + anpasser, 198) == -14245082
                             || image.getRGB(275 + anpasser, 198) == -14306778) {
                         // Noch keine Karte ausgespielt. Not a card
-                        tableCards.addLast(new Card("N", 0));
+                        //tableCards.addLast(new Card("N", 0));
                     } else {
                         // Herz bestimmt, ermittel Wert.
                         tableCards.addLast(new Card("h", ermittelWert(image, anpasser,
@@ -189,7 +226,7 @@ public class CardChecker {
                             || image.getRGB(275 + anpasser, 200) == -14448347
                             || image.getRGB(275 + anpasser, 200) == -14307291) {
                         // Noch keine Karte ausgespielt. Not a card
-                        tableCards.addLast(new Card("N", 0));
+                        //tableCards.addLast(new Card("N", 0));
                     } else {
                         // Kreuz bestimmt, ermittel Wert.
                         tableCards.addLast(new Card("c", ermittelWert(image, anpasser,
@@ -202,7 +239,7 @@ public class CardChecker {
                             || image.getRGB(274 + anpasser, 202) == -14930405
                             || image.getRGB(274 + anpasser, 202) == -14372056) {
                         // Noch keine Karte ausgespielt. Not a card
-                        tableCards.addLast(new Card("N", 0));
+                        //tableCards.addLast(new Card("N", 0));
                     } else {
                         // Pik bestimmt, ermittel Wert.
                         tableCards.addLast(new Card("s", ermittelWert(image, anpasser,
@@ -213,9 +250,8 @@ public class CardChecker {
                 // passe X-Richtung fuer naechste Karte an
                 anpasser += 54;
             }
-
-
-
+            checkTableCards();
+            
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -268,6 +304,7 @@ public class CardChecker {
 //                System.out.println("Eigene Karten noch nicht erhalten!");
             }
             
+            checkOwnCards();
 
         } catch (Exception e) {
             System.out.println(e.getMessage());

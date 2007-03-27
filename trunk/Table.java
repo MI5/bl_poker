@@ -17,6 +17,8 @@ import javax.swing.JPanel;
  * 
  */
 public class Table {
+    
+    private boolean online = false;
 
     private CardSet cards = new CardSet();
 
@@ -37,24 +39,41 @@ public class Table {
         // Initialisiere den CardChecker
         check = new CardChecker();
         // erstellt neue JFrameInstanz mit Titel "PokerLauncher"
-        frame = new JFrame("Poker Launcher V0.2");
+        frame = new JFrame("Poker Launcher V0.3");
         // ermoeglicht das Beenden ueber Klicken auf das Kreuz rechts oben
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // setzt die Groesse des JFrame
-        frame.setSize(202, 200);
+        frame.setSize(206, 300);
         // passt die Koordinaten an, damit das Frame nicht ueber dem
         // Pokerfenster liegt.
         frame.setLocation(818, 0);
         // jetzt kann man es auch sehen. :)
+        frame.setVisible(true);
         frame.getContentPane().add(getButtons(), BorderLayout.NORTH);
         // fuege die Zeichenklasse hinzu
         frame.getContentPane().add(painter, BorderLayout.CENTER);
-        frame.setVisible(true);
+        frame.setResizable(false);
+        //initializeFrame();
         // VERÄNDERUNG Table startet Empfangsthread
         c = new PokerClient(this);
         Thread t1 = new Thread(c);
         t1.start();
+        refreshInfo("Online-Modus abgeschaltet");
     }
+    
+    
+    public void initializeFrame() {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(getButtons(), BorderLayout.NORTH);
+        // fuege die Zeichenklasse hinzu
+        frame.getContentPane().add(painter, BorderLayout.CENTER);
+        frame.setResizable(false);
+        frame.validate();
+
+    }
+    
+    
+    
 
     /**
      * Erstellt ein JPanel mit 2 Buttons fuer Karten senden und Beenden.
@@ -63,22 +82,38 @@ public class Table {
      */
     public JPanel getButtons() {
         // erstelle die Buttons Laden, Suchen und Beenden
-        JButton send = new JButton("Send");
-        JButton refresh = new JButton("Refresh");
+        JButton send = new JButton("Beenden");
+        JButton onlineButton;
+        if (online) {
+            onlineButton = new JButton("Deaktivieren");
+        }
+        else {
+            onlineButton = new JButton("  Aktivieren   ");
+        }
         // erstelle neues JPanel fuer die Buttons
-        JPanel buttons = new JPanel();
+        final JPanel buttons = new JPanel();
 
         // fuege die 2 Button hinzu
         buttons.add(send);
-        buttons.add(refresh);
+        buttons.add(onlineButton);
         // fuege fuer jeden Button einen Listener hinzu
         send.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                
+                System.exit(1);
             }
         });
-        refresh.addActionListener(new ActionListener() {
+        onlineButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
+                if (online) {
+                    online = false;
+                    refreshInfo("Online-Modus gestoppt");
+                }
+                else {
+                    online = true;
+                    refreshInfo("Online-Modus gestartet");
+                }
+                initializeFrame();
+                
             }
         });
         return buttons;
