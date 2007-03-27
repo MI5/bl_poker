@@ -50,6 +50,12 @@ public class PokerServer {
 
                 // ChatManager erzeugen und mit Parametern versorgen
                 PokerManager cm = new PokerManager(name, client);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
 
             }
         } catch (IOException e) {
