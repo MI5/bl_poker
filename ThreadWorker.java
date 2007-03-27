@@ -41,7 +41,10 @@ public class ThreadWorker implements Runnable {
                 fold = false;
                 // Aenderung! Man hat neue Karten bekommen was passiert?
                 // Man schickt Sie an den Partner durch:
-                table.sendNewClient();
+                if (table.getOnlineStatus()) {
+                    System.out.println("ONLINE");
+                    table.sendNewClient();
+                }
             }
             // Pruefe auf Fold. Fuer spaetere Verwendung
             else if (table.check.getOwnCards().toString().replaceAll("0", "").length() == 2 && fold == false) {

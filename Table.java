@@ -27,6 +27,8 @@ public class Table {
     TablePainter painter = new TablePainter();
 
     private LinkedList<Card> playerCards = new LinkedList<Card>();
+    
+    private Thread t1;
 
     CardChecker check;
     
@@ -39,7 +41,7 @@ public class Table {
         // Initialisiere den CardChecker
         check = new CardChecker();
         // erstellt neue JFrameInstanz mit Titel "PokerLauncher"
-        frame = new JFrame("Poker Launcher V0.3");
+        frame = new JFrame("Poker Launcher V0.4");
         // ermoeglicht das Beenden ueber Klicken auf das Kreuz rechts oben
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // setzt die Groesse des JFrame
@@ -56,13 +58,18 @@ public class Table {
         //initializeFrame();
         // VERÄNDERUNG Table startet Empfangsthread
         c = new PokerClient(this);
-        Thread t1 = new Thread(c);
+        t1 = new Thread(c);
         t1.start();
         refreshInfo("Online-Modus abgeschaltet");
     }
     
     
     public void initializeFrame() {
+        t1.interrupt();
+        c.closeSocket();
+        c = new PokerClient(this);
+        t1 = new Thread(c);
+        t1.start();
         frame.getContentPane().removeAll();
         frame.getContentPane().add(getButtons(), BorderLayout.NORTH);
         // fuege die Zeichenklasse hinzu
@@ -191,5 +198,13 @@ public class Table {
             playerCards = playerCardsTemp;
             refresh();
         }
+    }
+    
+    /**
+     * Gibt den Online-Modus-Status zurueck. 
+     * @return true wenn aktiv
+     */
+    public boolean getOnlineStatus() {
+        return online;
     }
 }
